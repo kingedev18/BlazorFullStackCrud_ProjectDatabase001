@@ -1,0 +1,59 @@
+﻿@page "/goods"
+@inject IGoodsService GoodsService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Goods</PageTitle>
+
+<h3>Goods</h3>
+
+@if (GoodsService.Goods == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>GoodID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Quantity Of Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var good in GoodsService.Goods)
+            {
+                <tr>
+                    <td>@good.GoodID</td>
+                    <td>@good.Name</td>
+                    <td>@good.Description</td>
+                    <td>@good.QuantityOfStock</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="(() => ShowGood(good.GoodID))"><i class="oi oi-pencil"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="CreateNewGood">Create New Good</button>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await GoodsService.GetGoods();
+    }
+
+    void ShowGood(int id)
+    {
+        NavigationManager.NavigateTo($"goods/{id}");
+    }
+
+    void CreateNewGood()
+    {
+        NavigationManager.NavigateTo("/goods");
+    }
+}
